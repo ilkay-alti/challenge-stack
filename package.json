@@ -10,6 +10,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "challenge-stack": ".",
     "lint-staged": "^15.4.3",
     "next": "15.1.7",
     "react": "^19.0.0",

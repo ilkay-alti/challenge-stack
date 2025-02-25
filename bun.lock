@@ -4,6 +4,7 @@
     "": {
       "name": "challenge-stack",
       "dependencies": {
+        "challenge-stack": ".",
         "lint-staged": "^15.4.3",
         "next": "15.1.7",
         "react": "^19.0.0",
@@ -286,6 +287,8 @@
     "caniuse-lite": ["caniuse-lite@1.0.30001700", "", {}, "sha512-2S6XIXwaE7K7erT8dY+kLQcpa5ms63XlRkMkReXjle+kf6c5g38vyMl+Z5y8dSxOFDhcFe+nxnn261PLxBSQsQ=="],
 
     "chalk": ["chalk@4.1.2", "", { "dependencies": { "ansi-styles": "^4.1.0", "supports-color": "^7.1.0" } }, "sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA=="],
+
+    "challenge-stack": ["challenge-stack@file:", { "dependencies": { "lint-staged": "^15.4.3", "next": "15.1.7", "react": "^19.0.0", "react-dom": "^19.0.0" }, "devDependencies": { "@commitlint/cli": "^19.7.1", "@commitlint/config-conventional": "^19.7.1", "@eslint/eslintrc": "^3", "@types/node": "^20", "@types/react": "^19", "@types/react-dom": "^19", "eslint": "^9", "eslint-config-next": "15.1.7", "husky": "^9.1.7", "postcss": "^8", "prettier": "^3.5.2", "tailwindcss": "^3.4.1", "typescript": "^5" } }],
 
     "chokidar": ["chokidar@3.6.0", "", { "dependencies": { "anymatch": "~3.1.2", "braces": "~3.0.2", "glob-parent": "~5.1.2", "is-binary-path": "~2.1.0", "is-glob": "~4.0.1", "normalize-path": "~3.0.0", "readdirp": "~3.6.0" }, "optionalDependencies": { "fsevents": "~2.3.2" } }, "sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw=="],
 

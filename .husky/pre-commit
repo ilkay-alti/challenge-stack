@@ -1,4 +1,4 @@
 
 
 bun test
-bunx --no --commitlint --edit
+npx --no --commitlint --edit 
