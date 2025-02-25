@@ -1,4 +1,4 @@
 
 
-bun run test
 bunx lint-staged --concurrent false
+bun run test
