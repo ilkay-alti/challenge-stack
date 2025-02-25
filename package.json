@@ -14,10 +14,12 @@
     "test:watch": "bun run test:components -- --watch"
   },
   "dependencies": {
+    "@prisma/client": "^6.4.1",
     "@types/jest": "^29.5.14",
     "challenge-stack": ".",
     "lint-staged": "^15.4.3",
     "next": "15.1.7",
+    "prisma": "^6.4.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

@@ -1,0 +1,92 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id      String   @id @default(uuid())
+  name     String
+  email    String   @unique
+  password String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  challenges Challenge[]
+  transasctions Transaction[]
+  portfolios Portfolio[]
+  achievements Achievement[]
+  currentStage Stage? @relation(fields: [currentStageId], references: [id])
+  currentStageId String?
+}
+
+
+model Challenge {
+  id              String     @id @default(uuid())
+  name            String
+  description     String
+  startDate       DateTime
+  endDate         DateTime?
+  targetReturn    Float      // %300, %30 gibi
+  initialCapital  Float      // Başlangıç sermayesi
+  currentCapital  Float      // Güncel sermaye
+  status          String     @default("active") // active/completed/failed
+  stages          Stage[]
+  userId          String
+  user            User       @relation(fields: [userId], references: [id])
+}
+
+model Stage {
+  id              String     @id @default(uuid())
+  order           Int        
+  targetReturn    Float
+  targetAmount    Float      
+  durationDays    Int        
+  startDate       DateTime
+  endDate         DateTime?
+  status          String     @default("active")
+  challenge       Challenge  @relation(fields: [challengeId], references: [id])
+  challengeId     String
+
+  Transaction Transaction[]
+
+  User User[]
+}
+
+model Transaction {
+  id              String     @id @default(uuid())
+  type            String     // BUY/SELL
+  assetType       String     // CRYPTO/STOCK/GOLD
+  assetName       String     // BTC-USD, AAPL vs.
+  quantity        Float
+  price           Float
+  timestamp       DateTime   @default(now())
+  userId          String
+  user            User       @relation(fields: [userId], references: [id])
+  stageId         String?
+  stage           Stage?     @relation(fields: [stageId], references: [id])
+}
+
+model Portfolio {
+  id              String     @id @default(uuid())
+  assetType       String
+  assetName       String
+  quantity        Float
+  averageBuyPrice Float
+  currentPrice    Float?
+  userId          String
+  user            User       @relation(fields: [userId], references: [id])
+}
+
+model Achievement {
+  id              String     @id @default(uuid())
+  name            String
+  description     String
+  icon            String
+  users           User[]
+}
