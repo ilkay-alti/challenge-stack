@@ -11,5 +11,10 @@ export const registerSchema = z.object({
   name: z.string().min(2, "İsim en az 2 karakter olmalıdır"),
 });
 
+export const forgetPasswordSchema = z.object({
+  email: z.string().email("Geçerli bir email giriniz"),
+});
+
 export type LoginSchema = z.infer<typeof loginSchema>;
 export type RegisterSchema = z.infer<typeof registerSchema>;
+export type ForgetPasswordSchema = z.infer<typeof forgetPasswordSchema>;

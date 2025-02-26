@@ -2,9 +2,11 @@
 "use server";
 
 import { getSession } from "@/lib/auth-session";
-import { passwordCompare, passwordHash } from "@/lib/crypto";
+import { passwordCompare, passwordHash } from "@/utils/crypto";
 import prisma from "@/lib/prisma";
+import { generatePasswordResetToken } from "@/utils/token";
 import { loginSchema, registerSchema } from "@/validations/Auth.validation";
+import { sendResetPasswordEmail } from "@/utils/mail";
 
 export async function login(email: string, password: string) {
   const session = await getSession();
@@ -65,5 +67,24 @@ export async function logout() {
   const session = await getSession();
 
   session.destroy();
+  return { success: true };
+}
+
+//Reset Password token generation
+export async function forgetPassword(email: string) {
+  const session = await getSession();
+  if (session.userId) {
+    throw new Error("You are already logged in");
+  }
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) {
+    throw new Error("Email not found pls register");
+  }
+  const passwordResetToken = await generatePasswordResetToken(user.email);
+
+  if (!passwordResetToken) {
+    throw new Error("Error in generating password reset token");
+  }
+  sendResetPasswordEmail(user.email, passwordResetToken.token);
   return { success: true };
 }
