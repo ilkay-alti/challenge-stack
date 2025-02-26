@@ -7,6 +7,8 @@ export const metadata: Metadata = {
 };
 
 import React from "react";
+import TanStackProvider from "@/components/provider/TanStack";
+import { ToastContainer } from "react-toastify";
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -14,9 +16,12 @@ interface RootLayoutProps {
 const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html lang="en">
-      <body>
-        <div className="h-full">{children}</div>
-      </body>
+      <TanStackProvider>
+        <body>
+          <div className="h-full">{children}</div>
+          <ToastContainer />
+        </body>
+      </TanStackProvider>
     </html>
   );
 };

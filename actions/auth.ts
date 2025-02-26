@@ -1,88 +1,69 @@
+// actions/auth.ts
 "use server";
 
 import { getSession } from "@/lib/auth-session";
 import { passwordCompare, passwordHash } from "@/lib/crypto";
 import prisma from "@/lib/prisma";
-import { createResponse } from "@/lib/response";
-import { redirect } from "next/navigation";
-import { NextRequest } from "next/server";
+import { loginSchema, registerSchema } from "@/validations/Auth.validation";
 
-//login
-export async function login(req: NextRequest) {
+export async function login(email: string, password: string) {
   const session = await getSession();
+  const parsedData = loginSchema.safeParse({ email, password });
 
-  const { email, password } = await req.json();
-
-  if (!email || !password) {
-    return createResponse("Email and password are required!", 400);
+  if (!parsedData.success) {
+    throw new Error(parsedData.error.errors[0].message);
   }
 
-  const user = await prisma.user.findUnique({
-    where: {
-      email: email,
-    },
-  });
-
+  const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
-    return createResponse("Wrong Credentials!", 404);
+    throw new Error("Invalid credentials");
   }
 
-  const passwordMatch = passwordCompare(password, user?.password!);
-
-  if (!passwordMatch) {
-    return createResponse("Wrong Credentials!", 404);
+  const isPasswordValid = await passwordCompare(password, user.password);
+  if (!isPasswordValid) {
+    throw new Error("Invalid credentials");
   }
 
   session.userId = user.id;
   session.isLoggedIn = true;
-
   await session.save();
-  redirect("/");
+  return { success: true };
 }
 
-//register
-export async function register(req: NextRequest) {
+export async function register(email: string, password: string, name: string) {
   const session = await getSession();
-  const { email, password, name } = await req.json();
 
   if (!email || !password || !name) {
-    return createResponse("Email, name and password are required!", 400);
+    const errMsg = "Email, name and password are required!";
+    throw new Error(errMsg);
   }
 
-  const existingUser = await prisma.user.findUnique({
-    where: {
-      email: email,
-    },
-  });
+  const parsedData = registerSchema.safeParse({ email, password, name });
+  if (!parsedData.success) {
+    const errMsg = parsedData.error.errors[0].message;
+    throw new Error(errMsg);
+  }
 
+  const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
-    return createResponse("User already exists!", 400);
+    const errMsg = "User already exists!";
+    throw new Error(errMsg);
   }
 
   const hashedPassword = await passwordHash(password);
-
   const user = await prisma.user.create({
-    data: {
-      email: email,
-      password: hashedPassword,
-      name: name,
-    },
+    data: { email, password: hashedPassword, name },
   });
-
-  if (!user) {
-    return createResponse("User could not be created!", 500);
-  }
 
   session.userId = user.id;
   session.isLoggedIn = true;
-
   await session.save();
-  redirect("/");
+  return { success: true };
 }
 
-//logout
 export async function logout() {
   const session = await getSession();
+
   session.destroy();
-  redirect("/");
+  return { success: true };
 }

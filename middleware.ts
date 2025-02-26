@@ -1,11 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "./lib/auth-session";
 
+const publickRoutes = [
+  "/login",
+  "/register",
+  "/forgot-password",
+  "/reset-password",
+  "/",
+];
+
 export default async function middleware(req: NextRequest) {
   const session = await getSession();
+  const { pathname } = req.nextUrl;
 
-  if (!session.isLoggedIn && !req.nextUrl.pathname.startsWith("/login")) {
-    return NextResponse.redirect(new URL("/login", req.url));
+  if (publickRoutes.includes(pathname)) {
+    return NextResponse.next();
+  }
+
+  if (!session.isLoggedIn) {
+    return NextResponse.redirect(new URL("/login", req.url).toString());
   }
 
   return NextResponse.next();
