@@ -3,8 +3,7 @@ import React from "react";
 
 const VerifyTwoFAPage = () => {
   return (
-    <div>
-      <h1>Verify Two Factor Authentication</h1>
+    <div className="flex flex-col items-center justify-center h-screen ">
       <VeriftTwoFAForm />
     </div>
   );

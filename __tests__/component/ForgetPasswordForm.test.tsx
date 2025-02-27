@@ -31,7 +31,7 @@ describe("ForgetPasswordForm", () => {
     ).toBeInTheDocument();
   });
 
-  test("kullanıcı e-posta girebilmeli", async () => {
+  test("kullanici e-posta girebilmeli", async () => {
     const user = userEvent.setup();
     render(<ForgetPasswordForm />);
 
