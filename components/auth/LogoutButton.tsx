@@ -7,7 +7,7 @@ export default function LogoutButton() {
 
   return (
     <button onClick={() => mutation.mutate()} disabled={mutation.isPending}>
-      {mutation.isPending ? "Çıkış Yapılıyor..." : "Çıkış Yap"}
+      {mutation.isPending ? "Pending Logout..." : "Logout"}
     </button>
   );
 }
