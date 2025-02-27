@@ -29,30 +29,39 @@ const NewPasswordForm = ({ token }: { token: string }) => {
     }
   };
   return (
-    <>
+    <div className="flex flex-col items-center justify-center p-6 bg-[#0D2946] shadow-md rounded-md gap-10">
+      <h1 className="text-4xl font-extrabold text-white mb-4">New Password</h1>
       <form onSubmit={handleNewPassword}>
+        <label htmlFor="password" className="text-white">
+          New Password
+        </label>
         <input
+          id="password"
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 rounded-md w-full mb-2"
+          className="hover:border-white border border-gray-500 p-3 rounded-md w-full mb-6 bg-[#0D2946]"
         />
+        <label htmlFor="confirmPassword" className="text-white">
+          Confirm Password
+        </label>
         <input
+          id="confirmPassword"
           type="password"
           placeholder="Confirm Password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          className="border p-2 rounded-md w-full mb-2"
+          className="hover:border-white border border-gray-500 p-3 rounded-md w-full mb-6 bg-[#0D2946]"
         />
         <button
           type="submit"
-          className="bg-blue-500 text-white p-2 rounded-md w-full"
+          className="bg-[#3399FF] text-[#151936] flex items-center justify-center font-bold text-xl p-2 w-full rounded-md max-w-full "
         >
           Reset Password
         </button>
       </form>
-    </>
+    </div>
   );
 };
 
