@@ -46,10 +46,6 @@ export default function LoginForm() {
         >
           {loginMutation.isPending ? "Logging in..." : "Login"}
         </button>
-        {loginMutation.error && (
-          <p className="text-red-500 mt-2">{loginMutation.error.message}</p>
-        )}
-        <h1>ilkay@ilkay.ilkay</h1>
       </form>
       {cardVisible ? (
         <div

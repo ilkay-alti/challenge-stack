@@ -1,9 +1,8 @@
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.email",
-  port: 465,
-  secure: true,
+  host: "smtp.gmail.com", // Corrected the SMTP host
+  port: 587,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -11,7 +10,7 @@ const transporter = nodemailer.createTransport({
 });
 
 export const sendResetPasswordEmail = async (email: string, token: string) => {
-  const confirmLink = `${process.env.NEXTAUTH_URL}/auth/new-verification?token=${token}`;
+  const confirmLink = `${process.env.NEXTAUTH_URL}/new-password/${token}`;
 
   await transporter.sendMail({
     to: email,

@@ -1,10 +1,17 @@
 // hooks/useAuth.ts
 "use client";
 
-import { forgetPassword, login, logout, register } from "@/actions/auth";
+import {
+  forgetPassword,
+  login,
+  logout,
+  newPassword,
+  register,
+} from "@/actions/auth";
 import {
   ForgetPasswordSchema,
   LoginSchema,
+  NewPasswordSchema,
   RegisterSchema,
 } from "@/validations/Auth.validation";
 import { useMutation } from "@tanstack/react-query";
@@ -88,6 +95,28 @@ export function useForgetPassword() {
       toast.error(errorMessage);
       if (error.message === "Email not found pls register") {
         router.push("/register");
+      }
+      return { message: errorMessage };
+    },
+  });
+}
+//new password
+export function useNewPassword() {
+  const router = useRouter();
+  return useMutation({
+    mutationFn: (data: NewPasswordSchema) =>
+      newPassword(data.token, data.password),
+    onSuccess: () => {
+      toast.success("Password reset successfully!");
+      router.push("/login");
+      router.refresh();
+    },
+    onError: (error) => {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred.";
+      toast.error(errorMessage);
+      if (error.message === "Invalid token") {
+        router.push("/");
       }
       return { message: errorMessage };
     },

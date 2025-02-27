@@ -88,3 +88,53 @@ export async function forgetPassword(email: string) {
   sendResetPasswordEmail(user.email, passwordResetToken.token);
   return { success: true };
 }
+
+// New Password
+export async function newPassword(token: string, password: string) {
+  if (!password || !token) {
+    throw new Error("Password and token are required");
+  }
+
+  console.log(token, password);
+
+  const existingToken = await prisma.passwordResetToken.findUnique({
+    where: { token: token },
+  });
+  console.log(existingToken, "existingToken");
+
+  if (!existingToken) {
+    throw new Error(`Invalid token`);
+  }
+  const hasExpired = existingToken.expires < new Date();
+  if (hasExpired) {
+    throw new Error("Token has expired");
+  }
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      email: existingToken.email,
+    },
+  });
+  if (!existingUser) {
+    throw new Error("User not found");
+  }
+  const hashedPassword = await passwordHash(password);
+
+  // Update user password
+  await prisma.user.update({
+    where: {
+      id: existingUser.id,
+    },
+    data: {
+      password: hashedPassword,
+    },
+  });
+
+  // Delete Token
+  await prisma.passwordResetToken.delete({
+    where: {
+      token,
+    },
+  });
+
+  return { success: true };
+}

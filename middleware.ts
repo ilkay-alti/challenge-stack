@@ -7,6 +7,7 @@ const publickRoutes = [
   "/forgot-password",
   "/reset-password",
   "/",
+  "/new-passpword",
 ];
 
 export default async function middleware(req: NextRequest) {
