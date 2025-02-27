@@ -8,7 +8,7 @@ module.exports = createJestConfig({
   testEnvironment: "jsdom",
   testMatch: ["**/__tests__/component/**/*.test.[jt]s?(x)"],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1",
+    "^@/(.*)$": "<rootDir>/$1",
     "\\.(css|scss|sass)$": "identity-obj-proxy",
   },
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],

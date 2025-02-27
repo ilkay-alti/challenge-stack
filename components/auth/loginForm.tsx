@@ -20,32 +20,40 @@ export default function LoginForm() {
     setCardVisible(false);
   };
   return (
-    <>
-      <form
-        onSubmit={handleLogin}
-        className="p-6 bg-white shadow-md rounded-md"
-      >
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="border p-2 rounded-md w-full mb-2"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 rounded-md w-full mb-2"
-        />
-        <button
-          type="submit"
-          disabled={loginMutation.isPending}
-          className="bg-blue-500 text-white p-2 rounded-md w-full"
-        >
-          {loginMutation.isPending ? "Logging in..." : "Login"}
-        </button>
+    <div className="flex flex-col items-center justify-center p-6 bg-[#0D2946] shadow-md rounded-md">
+      <h1 className="text-4xl font-extrabold text-white mb-4">Login</h1>
+      <form onSubmit={handleLogin} className="p-6">
+        <div>
+          <label htmlFor="email" className="text-white">
+            Email
+          </label>
+          <input
+            id="email"
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="hover:border-white border border-gray-500 p-3 rounded-md w-full mb-6 bg-[#0D2946]"
+          />
+          <label htmlFor="password" className="text-white">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="hover:border-white border border-gray-500 p-3 rounded-md w-full mb-6 bg-[#0D2946]"
+          />
+          <button
+            type="submit"
+            disabled={loginMutation.isPending}
+            className="bg-[#3399FF] text-[#151936] flex items-center justify-center font-bold text-xl p-2 w-full rounded-md max-w-full "
+          >
+            {loginMutation.isPending ? "Logging in..." : "Login"}
+          </button>
+        </div>
       </form>
       {cardVisible ? (
         <div
@@ -57,6 +65,6 @@ export default function LoginForm() {
       ) : (
         <button onClick={() => setCardVisible(true)}>Forget Password</button>
       )}
-    </>
+    </div>
   );
 }

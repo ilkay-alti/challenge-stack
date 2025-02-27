@@ -17,7 +17,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html lang="en">
       <TanStackProvider>
-        <body>
+        <body className="bg-[#001E3C] text-white">
           <div className="h-full">{children}</div>
           <ToastContainer />
         </body>
