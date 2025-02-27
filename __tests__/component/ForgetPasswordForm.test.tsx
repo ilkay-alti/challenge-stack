@@ -65,7 +65,7 @@ describe("ForgetPasswordForm", () => {
     );
   });
 
-  test("yüklenme durumunda buton devre dışı kalır", () => {
+  test("yüklenme durumunda buton devre disi kalir", () => {
     (useForgetPassword as jest.Mock).mockReturnValue({
       mutate: jest.fn(),
       isPending: true,
