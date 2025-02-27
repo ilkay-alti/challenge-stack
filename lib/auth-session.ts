@@ -4,11 +4,15 @@ import { cookies } from "next/headers";
 export interface SessionData {
   userId?: string;
   isLoggedIn?: boolean;
+  twoFA?: boolean;
+  twoFAVerified?: boolean;
 }
 
 export const defaultSession: SessionData = {
   userId: undefined,
   isLoggedIn: false,
+  twoFA: false,
+  twoFAVerified: false,
 };
 
 export const sessionOptions: SessionOptions = {
@@ -35,6 +39,8 @@ export async function getSession() {
   if (!session.userId && !session.isLoggedIn) {
     session.userId = defaultSession.userId;
     session.isLoggedIn = defaultSession.isLoggedIn;
+    session.twoFA = defaultSession.twoFA;
+    session.twoFAVerified = defaultSession.twoFAVerified;
   }
 
   return session;

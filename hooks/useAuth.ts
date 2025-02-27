@@ -7,12 +7,16 @@ import {
   logout,
   newPassword,
   register,
+  tokenGeneration2FA,
+  verifyToken2FA,
 } from "@/actions/auth";
 import {
   ForgetPasswordSchema,
   LoginSchema,
   NewPasswordSchema,
   RegisterSchema,
+  GenerateTwoFactorSchema,
+  VerifyTwoFactorSchema,
 } from "@/validations/Auth.validation";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -118,6 +122,49 @@ export function useNewPassword() {
       if (error.message === "Invalid token") {
         router.push("/");
       }
+      return { message: errorMessage };
+    },
+  });
+}
+
+// generated 2FA code
+
+export function useGenerate2FA() {
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: (data: GenerateTwoFactorSchema) =>
+      tokenGeneration2FA(data.userId),
+    onSuccess: () => {
+      toast.success("2FA code sent to your email!");
+      router.push("/verify-2fa");
+      router.refresh();
+    },
+    onError: (error) => {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred.";
+      toast.error(errorMessage);
+      return { message: errorMessage };
+    },
+  });
+}
+
+// verify 2FA code
+export function useVerify2FA() {
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: (data: VerifyTwoFactorSchema) => verifyToken2FA(data.token),
+    onSuccess: () => {
+      toast.success("2FA code verified successfully!");
+      router.push("/dashboard");
+      router.refresh();
+    },
+
+    onError: (error) => {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred.";
+      toast.error(errorMessage);
       return { message: errorMessage };
     },
   });

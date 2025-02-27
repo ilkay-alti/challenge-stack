@@ -22,6 +22,10 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.url).toString());
   }
 
+  if (session.twoFA && !session.twoFAVerified && pathname !== "/verify-twofa") {
+    return NextResponse.redirect(new URL("/verify-twofa", req.url).toString());
+  }
+
   return NextResponse.next();
 }
 

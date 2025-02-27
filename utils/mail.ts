@@ -27,7 +27,7 @@ export const sendTwoFactorEmail = async (email: string, token: string) => {
   await transporter.sendMail({
     from: "nextauthv5@resend.dev",
     to: email,
-    subject: "Verify your email address",
+    subject: "2FA Verification Token",
     html: `
       <h1>2FA Verification Token</h1>
      <h2> ${token}</h2>   `,
