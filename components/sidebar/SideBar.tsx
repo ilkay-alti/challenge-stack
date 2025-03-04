@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useLogout, useUser } from "@/hooks/useAuth";
+import { usePathname } from "next/navigation";
 
 const navigation = [
   {
@@ -43,6 +44,7 @@ const navigation = [
 const SideBar = () => {
   const [isOpen, setIsOpen] = React.useState(false);
 
+  const pathname = usePathname();
   const mutation = useLogout();
   //get user
   const getUser = useUser();
@@ -51,14 +53,14 @@ const SideBar = () => {
   }, []);
   return (
     <div
-      className={` ${isOpen ? "w-min" : "w-full"} flex   flex-col  max-w-80 border-r border-[#1F3954] gap-4  `}
+      className={` ${isOpen ? "w-full" : "w-min"} flex   flex-col  max-w-80 border-r border-[#1F3954] gap-4  `}
     >
       {/* // sidebartop */}
       <div
-        className={`flex py-4 border-b border-[#1F3954] px-4 ${!isOpen && "justify-between "}`}
+        className={`flex py-4 border-b border-[#1F3954] px-4 ${isOpen && "justify-between p-4"}`}
       >
-        {!isOpen && (
-          <div className="flex items-center space-x-5">
+        {isOpen && (
+          <div className="flex items-center space-x-4">
             <PiggyBankIcon className="h-8 w-8" />
             <h1 className="text-xl font-extrabold">Challenge-Stack</h1>
           </div>
@@ -66,12 +68,12 @@ const SideBar = () => {
 
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className={`flex items-center justify-center  hover:bg-gray-100/20 rounded-l  ${isOpen ? "flez justify-center items-center w-full py-2" : ""}`}
+          className={`flex items-center justify-center  hover:bg-gray-100/20 rounded-l p-4  ${!isOpen && "flex justify-center items-center w-full"}`}
         >
           {isOpen ? (
-            <PanelLeftOpenIcon className="h-8 w-8" />
-          ) : (
             <PanelRightOpenIcon className="h-8 w-8" />
+          ) : (
+            <PanelLeftOpenIcon className="h-8 w-8" />
           )}
         </button>
       </div>
@@ -82,10 +84,16 @@ const SideBar = () => {
           <Link
             key={nav.id}
             href={nav.href}
-            className={`flex items-center  p-4 hover:bg-gray-100/20 mx-2 rounded-xl ${isOpen ? "justify-center" : ""}`}
+            className={`flex items-center  p-4 hover:bg-gray-100/20 mx-2 rounded-xl ${!isOpen && "justify-center"} ${
+              pathname === nav.href
+                ? "text-[#3091F3] bg-[#0A3763] hover:bg-[#0F4377]"
+                : ""
+            }`}
           >
             {nav.icon}
-            <span className={`ml-4 ${isOpen ? "hidden" : "flex"}`}>
+            <span
+              className={`ml-4 text-xl font-bold ${isOpen ? "flex" : "hidden"}`}
+            >
               {nav.name}
             </span>
           </Link>
@@ -94,13 +102,13 @@ const SideBar = () => {
 
       {/* // sidebarfooter */}
       <div className="flex items-center justify-between px-6 py-4 border-t border-[#1F3954]">
-        <h2 className={`font-bold text-xl ${isOpen ? "hidden" : "flex"}`}>
+        <h2 className={`font-bold text-xl ${isOpen ? "flex" : "hidden"}`}>
           {getUser.data?.name}
         </h2>
         <button
           onClick={() => mutation.mutate()}
           disabled={mutation.isPending}
-          className="text-white hover:bg-gray-100/20 hover:text-red-200 p-2 rounded-l"
+          className={`text-white hover:bg-gray-100/20 hover:text-red-200 p-2 rounded-l }`}
         >
           {mutation.isPending ? (
             <LoaderCircleIcon className="h-6 w-6 animate-spin" />

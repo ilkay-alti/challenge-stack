@@ -10,6 +10,14 @@ const publickRoutes = [
   "/new-passpword",
 ];
 
+const loginUserForbiddenUser = [
+  "/login",
+  "/register",
+  "/forgot-password",
+  "/reset-password",
+  "/new-passpword",
+];
+
 export default async function middleware(req: NextRequest) {
   const session = await getSession();
   const { pathname } = req.nextUrl;
@@ -26,7 +34,9 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/verify-twofa", req.url).toString());
   }
 
-  return NextResponse.next();
+  if (session.isLoggedIn && loginUserForbiddenUser.includes(pathname)) {
+    return NextResponse.redirect(new URL("/dashboard", req.url).toString());
+  }
 }
 
 export const config = {
