@@ -3,6 +3,7 @@
 
 import {
   forgetPassword,
+  getUser,
   login,
   logout,
   newPassword,
@@ -165,6 +166,27 @@ export function useVerify2FA() {
       const errorMessage =
         error instanceof Error ? error.message : "An unknown error occurred.";
       toast.error(errorMessage);
+      return { message: errorMessage };
+    },
+  });
+}
+
+// user hook
+export function useUser() {
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: () => getUser(),
+    onSuccess: (data) => {
+      return data;
+    },
+    onError: (error) => {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred.";
+      toast.error(errorMessage);
+      if (error.message === "User not found") {
+        router.push("/login");
+      }
       return { message: errorMessage };
     },
   });

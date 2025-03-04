@@ -35,7 +35,7 @@ export async function login(email: string, password: string) {
   session.twoFA = user.twoFactorConfirmation;
   await session.save();
 
-  if (user.twoFactorConfirmation) {
+  if (user.twoFactorConfirmation && !session.twoFAVerified) {
     tokenGeneration2FA(user.id);
   }
   return { success: true };
@@ -206,4 +206,19 @@ export async function verifyToken2FA(token: string) {
   await session.save();
 
   return { success: true };
+}
+
+// Get user
+export async function getUser() {
+  const session = await getSession();
+  if (!session.userId) {
+    throw new Error("Unauthorized");
+  }
+  const user = await prisma.user.findUnique({
+    where: { id: session.userId },
+  });
+  if (!user) {
+    throw new Error("User not found");
+  }
+  return user;
 }

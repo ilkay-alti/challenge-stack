@@ -18,7 +18,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
     <html lang="en">
       <TanStackProvider>
         <body className="bg-[#001E3C] text-white">
-          <div className="h-full">{children}</div>
+          <div className="grow h-full">{children}</div>
           <ToastContainer />
         </body>
       </TanStackProvider>
