@@ -6,6 +6,7 @@ export interface SessionData {
   isLoggedIn?: boolean;
   twoFA?: boolean;
   twoFAVerified?: boolean;
+  role?: string;
 }
 
 export const defaultSession: SessionData = {
@@ -13,6 +14,7 @@ export const defaultSession: SessionData = {
   isLoggedIn: false,
   twoFA: false,
   twoFAVerified: false,
+  role: "user",
 };
 
 export const sessionOptions: SessionOptions = {
@@ -41,6 +43,7 @@ export async function getSession() {
     session.isLoggedIn = defaultSession.isLoggedIn;
     session.twoFA = defaultSession.twoFA;
     session.twoFAVerified = defaultSession.twoFAVerified;
+    session.role = defaultSession.role;
   }
 
   return session;

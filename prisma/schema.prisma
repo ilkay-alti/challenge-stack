@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,16 +16,15 @@ model User {
   twoFactorConfirmation Boolean @default(false)   
   emailVerified Boolean @default(false)
   role     String   @default("user") 
-  
+  initialCapital          Float?     
+  currentCapital          Float?     
+  transactions            Transaction[]
+  challenges              Challenge[]
+  achievements            Achievement[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  challenges Challenge[]
-  transasctions Transaction[]
-  portfolios Portfolio[]
-  achievements Achievement[]
-  currentStage Stage? @relation(fields: [currentStageId], references: [id])
-  currentStageId String?
 }
 
 
@@ -49,66 +47,57 @@ model PasswordResetToken {
 }
 
 model Challenge {
-  id              String     @id @default(uuid())
-  name            String
-  description     String
-  startDate       DateTime
-  endDate         DateTime?
-  targetReturn    Float      // %300, %30 gibi
-  initialCapital  Float      // Başlangıç sermayesi
-  currentCapital  Float      // Güncel sermaye
-  status          String     @default("active") // active/completed/failed
-  stages          Stage[]
-  userId          String
-  user            User       @relation(fields: [userId], references: [id])
-}
+  id            Int        @id @default(autoincrement())
+  name          String
+  description   String?
+  targetType    String     // "profit", "percentage", "volume"
+  targetValue   Float
+  startDate     DateTime
+  endDate       DateTime
+  isCompleted   Boolean    @default(false)
+  transactions  Transaction[]
+  userId        String
+  user          User       @relation(fields: [userId], references: [id])
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 
-model Stage {
-  id              String     @id @default(uuid())
-  order           Int        
-  targetReturn    Float
-  targetAmount    Float      
-  durationDays    Int        
-  startDate       DateTime
-  endDate         DateTime?
-  status          String     @default("active")
-  challenge       Challenge  @relation(fields: [challengeId], references: [id])
-  challengeId     String
-
-  Transaction Transaction[]
-
-  User User[]
+  @@map("challenges")
 }
 
 model Transaction {
-  id              String     @id @default(uuid())
-  type            String     // BUY/SELL
-  assetType       String     // CRYPTO/STOCK/GOLD
-  assetName       String     // BTC-USD, AAPL vs.
-  quantity        Float
-  price           Float
-  timestamp       DateTime   @default(now())
-  userId          String
-  user            User       @relation(fields: [userId], references: [id])
-  stageId         String?
-  stage           Stage?     @relation(fields: [stageId], references: [id])
-}
+  id           String           @id @default(uuid())
+  type         TransactionType  // LONG, SHORT, BUY, SELL
+  assetSymbol  String           // Örnek: "BTC", "ETH"
+  quantity     Float            // İşlem yapılan miktar
+  entryPrice   Float            // Giriş (alış/satış) fiyatı
+  exitPrice    Float?           // Çıkış fiyatı (opsiyonel, işlem kapandıysa)
+  capital      Float            // İşlem anındaki kasa değeri
+  profit       Float?           // Kar (hesaplandıysa)
+  isOpen       Boolean          @default(true) // Açık pozisyon mu?
+  notes        String?          // Ek notlar (opsiyonel)
+  userId       String
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  challengeId  Int?
+  challenge    Challenge?       @relation(fields: [challengeId], references: [id])
 
-model Portfolio {
-  id              String     @id @default(uuid())
-  assetType       String
-  assetName       String
-  quantity        Float
-  averageBuyPrice Float
-  currentPrice    Float?
-  userId          String
-  user            User       @relation(fields: [userId], references: [id])
+
+  user            User      @relation(fields: [userId], references: [id])
+
+  @@map("transactions")
+}
+enum TransactionType {
+  LONG
+  SHORT
+  BUY
+  SELL
 }
 
 model Achievement {
-  id              String     @id @default(uuid())
-  name            String
-  description     String
-  icon            String
-  users           User[]
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  icon        String
+  criteria    Json
+  users       User[]
 }

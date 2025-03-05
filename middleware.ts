@@ -22,7 +22,11 @@ export default async function middleware(req: NextRequest) {
   const session = await getSession();
   const { pathname } = req.nextUrl;
 
-  if (publickRoutes.includes(pathname)) {
+  if (session.isLoggedIn && loginUserForbiddenUser.includes(pathname)) {
+    return NextResponse.redirect(new URL("/dashboard", req.url).toString());
+  }
+
+  if (!session.isLoggedIn && publickRoutes.includes(pathname)) {
     return NextResponse.next();
   }
 
@@ -32,10 +36,6 @@ export default async function middleware(req: NextRequest) {
 
   if (session.twoFA && !session.twoFAVerified && pathname !== "/verify-twofa") {
     return NextResponse.redirect(new URL("/verify-twofa", req.url).toString());
-  }
-
-  if (session.isLoggedIn && loginUserForbiddenUser.includes(pathname)) {
-    return NextResponse.redirect(new URL("/dashboard", req.url).toString());
   }
 }
 

@@ -1,4 +1,4 @@
-import SideBar from "@/components/sidebar/SideBar";
+import SideBar from "@/components/navigate/SideBar";
 import React from "react";
 
 interface layoutProps {
