@@ -38,7 +38,7 @@ export async function createTransaction({
   if (!transaction) {
     throw new Error("Transaction not created");
   }
-  return { success: true };
+  return transaction;
 }
 
 // Transaction Update
@@ -49,10 +49,9 @@ export async function updateTransaction({
 }) {
   const session = await getSession();
 
-  if (session?.userId) {
+  if (!session?.userId) {
     throw new Error("User not authenticated");
   }
-  //
 
   // Update transaction
   const existingTransaction = await prisma.transaction.findUnique({
@@ -66,13 +65,13 @@ export async function updateTransaction({
   }
 
   if (
-    session.role === "user" ||
+    session.role === "user" &&
     existingTransaction.userId !== session.userId
   ) {
     throw new Error("Unauthorized access");
   }
 
-  const updateTransaction = await prisma.transaction.update({
+  const updatedTransaction = await prisma.transaction.update({
     where: {
       id: data.id,
     },
@@ -89,10 +88,10 @@ export async function updateTransaction({
       userId: session.userId,
     },
   });
-  if (!updateTransaction) {
+  if (!updatedTransaction) {
     throw new Error("Transaction not updated");
   }
-  return { success: true };
+  return updatedTransaction;
 }
 
 // Transaction Delete
@@ -113,19 +112,19 @@ export async function deletedTransaction({
   });
 
   if (
-    session.role === "user" ||
-    existingTransaction?.userId === session.userId
+    session.role === "user" &&
+    existingTransaction?.userId !== session.userId
   ) {
-    {
-      throw new Error("Unauthorized access");
-    }
+    throw new Error("Unauthorized access");
   }
 
-  await prisma.transaction.delete({
+  const deleteTransaction = await prisma.transaction.delete({
     where: {
       id: data.id,
     },
   });
+
+  return deleteTransaction;
 }
 
 // User Transaction Get All

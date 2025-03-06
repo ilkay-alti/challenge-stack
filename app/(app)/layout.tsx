@@ -1,4 +1,5 @@
 import SideBar from "@/components/navigate/SideBar";
+import TopBar from "@/components/navigate/TopBar";
 import React from "react";
 
 interface layoutProps {
@@ -8,7 +9,10 @@ const layout = ({ children }: layoutProps) => {
   return (
     <div className="flex h-full ">
       <SideBar />
-      <div className="grow ">{children}</div>
+      <div className="grow ">
+        <TopBar />
+        {children}
+      </div>
     </div>
   );
 };
